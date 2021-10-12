@@ -1,27 +1,3 @@
-# Jira Release UI Filters and Table Sorting with Tampermonkey
-
-[Tampermonkey](https://www.tampermonkey.net/ "Tampermonkey") is s superscript manager that allows you to write and run javascript code on specific domains/pages/paths.
-It’s pretty handy to alter a site you use with your niche wants.
-
-## Needed
-[https://www.tampermonkey.net/](https://www.tampermonkey.net/)
-
-## Installation
-1. Add Tampermonkey to whichever browser you use. Here’s a video of how to install and use Tampermonkey: [https://youtu.be/8tyjJD65zws](https://youtu.be/8tyjJD65zws)
-2. Copy and paste the below code into a new script.
-3. Replace `your-subdomain` and `your-project-name` in the superscript config line:  
-   `// @match        https://your-subdomain.atlassian.net/projects/your-project-name/versions/*`
-4. Replace `your-assigne-column-name` on this line `var mainUser = 'your-assigne-column-name';` with the exact text of the label in the Assignee column.  
-   ![](https://thisbailiwick.com/wordpress/wp-content/uploads/2021/10/jira-assignee-label.png)
-5. Save the script and reload your Jira release page.
-
-## Caveats
-The table sorting will not work if you click between the below links. You can refresh the page to get it working.
-![](https://thisbailiwick.com/wordpress/wp-content/uploads/2021/10/Screenshot-of-Firefox-10-12-21-9-14-03-AM.png)
-
-## UserScript
-
-```js
 // ==UserScript==
 // @name         Jira Release filter by name and simple column sort
 // @namespace    JiraFilterByNameAndColumnSort
@@ -154,6 +130,3 @@ The table sorting will not work if you click between the below links. You can re
 
   observer.observe(document.querySelector("#release-report-tab-body-content"), {childList: true});
 })();
-```
-
-
