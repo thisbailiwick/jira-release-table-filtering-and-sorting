@@ -25,15 +25,17 @@ The table sorting will not work if you click between the below links. You can re
 // ==UserScript==
 // @name         Jira Release filter by name and simple column sort
 // @namespace    JiraFilterByNameAndColumnSort
-// @version      1.0
+// @version      1.1
 // @description  filter release rows by name and sort by column
 // @author       Kevin Clark
 // @match        https://your-subdomain.atlassian.net/projects/your-project-name/versions/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+// @grant        none
 // ==/UserScript==
 (function () {
   'use strict';
 
+  var mainTableCssSelector = '#ak-main-content>div:last-child>div:last-child>div>:last-child>div>table'
   var mainUser = 'your-assigne-column-name';
   var userRows = [];
 
@@ -47,7 +49,7 @@ The table sorting will not work if you click between the below links. You can re
     hidePastSelected('All');
 
     userRows.forEach(function (user) {
-      var wrappingElement = user.parentElement.parentElement.parentElement;
+      var wrappingElement = user.parentElement.parentElement.parentElement.parentElement.parentElement;
       wrappingElement.classList.remove('hide');
       wrappingElement.setAttribute('style', 'display: table-row');
     });
@@ -58,7 +60,7 @@ The table sorting will not work if you click between the below links. You can re
     hidePastSelected(currentName);
 
     userRows.forEach(function (user) {
-      var wrappingElement = user.parentElement.parentElement.parentElement;
+      var wrappingElement = user.parentElement.parentElement.parentElement.parentElement.parentElement;
 
       if (user.innerText !== currentName) {
         wrappingElement.classList.add('hide');
@@ -72,7 +74,7 @@ The table sorting will not work if you click between the below links. You can re
   }
 
   function filterRows() {
-    userRows = document.querySelectorAll('.release-report-issues .assignee span a');
+    userRows = document.querySelectorAll(mainTableCssSelector + '>tbody>tr>td:nth-child(2)>div>div>span>a');
     var names = [];
 
     userRows.forEach(function (user) {
@@ -83,7 +85,7 @@ The table sorting will not work if you click between the below links. You can re
       }
 
       if (user.innerText !== mainUser) {
-        var wrappingElement = user.parentElement.parentElement.parentElement;
+        var wrappingElement = user.parentElement.parentElement.parentElement.parentElement.parentElement;
         wrappingElement.classList.add('hide');
         wrappingElement.setAttribute('style', 'display: none');
       }
@@ -116,7 +118,7 @@ The table sorting will not work if you click between the below links. You can re
     });
     namesLinks += '</div>';
 
-    var contentWrap = document.querySelector('#release-report-tab-body-content .issue-list-header');
+    var contentWrap = document.querySelector('.css-krxk0f .ko9hdm-1');
     contentWrap.insertAdjacentHTML('beforebegin', namesLinks);
     contentWrap.insertBefore(linkElement, contentWrap.firstChild);
 
@@ -136,7 +138,7 @@ The table sorting will not work if you click between the below links. You can re
     });
   }
 
-  new Tablesort(document.querySelector('#release-report-tab-body-content .issue-list-panel>.aui'));
+  new Tablesort(document.querySelector(mainTableCssSelector));
   filterRows();
 
   const observer = new MutationObserver(function (mutations_list) {
@@ -145,14 +147,15 @@ The table sorting will not work if you click between the below links. You can re
 
       mutation.addedNodes.forEach(function (added_node) {
 
-        if (added_node.classList.contains('issue-list-panel')) {
+        if (added_node.classList.contains('ko9hdm-0')) {
           filterRows();
         }
       });
     });
   });
 
-  observer.observe(document.querySelector("#release-report-tab-body-content"), {childList: true});
+  observer.observe(document.querySelector(".css-1myr7x6"), {childList: true});
+
 })();
 ```
 
